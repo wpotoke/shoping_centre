@@ -16,9 +16,9 @@ def login(request):
             user = auth.authenticate(username=username, password=password)
             if user:
                 auth.login(request, user)
-                messages.success(request, f'{username}, вы вошли в аккаунт')
-                if request.POST.get('next', None):
-                    return HttpResponseRedirect(request.POST.get('next'))
+                messages.success(request, f"{username}, вы вошли в аккаунт")
+                if request.POST.get("next", None):
+                    return HttpResponseRedirect(request.POST.get("next"))
                 else:
                     return HttpResponseRedirect(reverse("main:index"))
     else:
@@ -35,13 +35,17 @@ def registration(request):
             form.save()
             user = form.instance
             auth.login(request, user)
-            messages.success(request, f'{user.username}, вы успешно зарегистрированны и вошли в аккаунт')
+            messages.success(
+                request,
+                f"{user.username}, вы успешно зарегистрированны и вошли в аккаунт",
+            )
             return HttpResponseRedirect(reverse("main:index"))
     else:
         form = UserRegistrationForm()
 
     context = {"title": "Home - Регистрация", "form": form}
     return render(request, "users/registration.html", context)
+
 
 @login_required
 def profile(request):
@@ -51,15 +55,20 @@ def profile(request):
         )
         if form.is_valid():
             form.save()
-            messages.success(request, 'профайл успешно обновлен')
+            messages.success(request, "профайл успешно обновлен")
             return HttpResponseRedirect(reverse("user:profile"))
     else:
         form = ProfileForm(instance=request.user)
     context = {"title": "Home - Кабинет", "form": form}
     return render(request, "users/profile.html", context)
 
+
+def users_cart(request):
+    return render(request, "users/users_cart.html")
+
+
 @login_required
 def logout(request):
-    messages.success(request, f'{request.user.username}, вы вышли из аккаунта')
+    messages.success(request, f"{request.user.username}, вы вышли из аккаунта")
     auth.logout(request)
     return redirect(reverse("main:index"))
