@@ -30,7 +30,7 @@ class Cart(models.Model):
 
     class Meta:
         db_table = "cart"
-        verbose_name = "Корзина"
+        verbose_name = "Корзину"
         verbose_name_plural = "Корзины"
 
     objects = CartQueryset().as_manager()
@@ -39,4 +39,7 @@ class Cart(models.Model):
         return round(self.product.sell_price() * self.quantity, 2)
 
     def __str__(self):
-        return f"Корзина {self.user.username} | Товар {self.product.name} | Колличество {self.quantity}"
+        if self.user:
+            return f"Корзина пользователя {self.user.username} | Товар {self.product.name} | Колличество {self.quantity}"
+        else:
+            return f"Корзина анонимуса {self.user.username} | Товар {self.product.name} | Колличество {self.quantity}"
